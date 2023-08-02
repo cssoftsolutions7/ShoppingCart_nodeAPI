@@ -7,7 +7,7 @@ var corsOptions = {
     origin: 'https://localhost:8080'
 }
 
-//Middleware
+//Middleware of the API Project
 
 app.use(cors(corsOptions))
 
