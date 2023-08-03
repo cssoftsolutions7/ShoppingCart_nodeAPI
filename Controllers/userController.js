@@ -1,7 +1,4 @@
 
-
-
-
 const AddUser = async (req, res) => {
     try {
         const { name, age, email } = req.body;
