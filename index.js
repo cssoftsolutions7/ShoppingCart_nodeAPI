@@ -1,31 +1,36 @@
-const express = require('express')
-const cors = require('cors')
+// index.js
+const express = require('express');
+const cors = require('cors');
+const bodyParser = require('body-parser');
+const userController = require('./Controllers/userController');
+const DatabaseConnection = require('./Config/DatabaseConnection');
 
-const app = express()
+
+const app = express();
 
 var corsOptions = {
-    origin: 'https://localhost:8080'
-}
+  origin: 'https://localhost:8080',
+};
 
-//Middleware of the API Project
+app.use(cors(corsOptions));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use(cors(corsOptions))
+app.get('/', (req, res) => {
+  res.json({ message: 'Welcome! Your API is Working Fine!' });
+});
 
-app.use(express.json())
+// Use the user controller for CRUD operations
+app.use('/', userController);
 
-app.use(express.urlencoded({extended: true}))
+const PORT = process.env.PORT || 8081;
 
-//Testing
+const databaseConnection = new DatabaseConnection();
 
-app.get('/' , (req, res) => {
-    res.json({ message: 'Welcome Your API is Working Fine !'})
-})
-
-//Port
-const PORT = process.env.PORT || 8081
-
-//Server
-
-app.listen(PORT, () => {
-    console.log(`Server is Running at Port : ${PORT}`)
-})
+databaseConnection.connect().then(() => {
+  app.listen(PORT, () => {
+    console.log(`Server is running at Port: ${PORT}`);
+  });
+}).catch((error) => {
+  console.error('Error connecting to the database:', error);
+});
