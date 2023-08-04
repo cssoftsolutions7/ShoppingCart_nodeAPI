@@ -3,6 +3,7 @@ const cors = require('cors');
 // const dbPool = require('./Config/dbPool'); // Import the dbPool file
 const { testConnection } = require('./Config/dbPool');
 const userRouter = require('./Routes/userRouter'); 
+const groupRouter = require('./Routes/groupRouter'); 
 const app = express();
 
 
@@ -38,6 +39,7 @@ testConnection()
   });
 
 app.use('/api', userRouter);
+app.use('/api', groupRouter);
 // Port
 // const PORT = process.env.PORT || 8081;
 
