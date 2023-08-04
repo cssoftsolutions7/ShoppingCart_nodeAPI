@@ -7,9 +7,6 @@ const groupRouter = require('./Routes/groupRouter');
 const app = express();
 
 
-
-// const UserRoutes = require("./Routes/userRouter");
-
 var corsOptions = {
   origin: 'https://localhost:8080',
 };
@@ -39,11 +36,6 @@ testConnection()
   });
 
 app.use('/api', userRouter);
-app.use('/api', groupRouter);
 // Port
 // const PORT = process.env.PORT || 8081;
 
-// Server
-// app.listen(PORT, () => {
-//   console.log(`Server is Running at Port : ${PORT}`);
-// });

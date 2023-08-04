@@ -4,12 +4,12 @@ const express = require('express');
 const { v4: uuidv4 } = require('uuid');
 const User = require('../Models/User');
 
-const moment = require('moment');
+
+// const moment = require('moment');
 
 
 // CREATE (POST)
 
-// router.post('/users', async (req, res) => {
   createUser= async (req, res) => {
   try {
     const { nickName, profileImage, email, birthday, gender, deviceToken, loginType, userState, withdrawReason,createdAt,updatedAt } = req.body;
@@ -36,8 +36,11 @@ const moment = require('moment');
   }
 };
 
+
+
+
 // READ (GET)
-// router.get('/users', async (req, res) => {
+
   getAllUsers= async (req, res) => {
   try {
     const users = await User.findAll();
@@ -49,7 +52,7 @@ const moment = require('moment');
 };
 
 // UPDATE (PUT)
-// router.put('/users/:id', async (req, res) => {
+
   updateUser=async (req, res) => {
   try {
     const { id } = req.params;

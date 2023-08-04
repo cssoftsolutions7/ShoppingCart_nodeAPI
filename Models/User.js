@@ -46,10 +46,15 @@ const User = sequelize.define('user', {
   createdAt: {
     type: DataTypes.DATE,
     allowNull: true,
+    defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+
   },
+
   updatedAt: {
     type: DataTypes.DATE,
     allowNull: true,
+    defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+
   },
 });
 
