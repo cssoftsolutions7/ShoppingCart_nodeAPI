@@ -1,31 +1,35 @@
-const express = require('express')
-const cors = require('cors')
+const express = require('express');
+const cors = require('cors');
+// const dbPool = require('./Config/dbPool'); // Import the dbPool file
+const { testConnection } = require('./Config/dbPool');
+const userRouter = require('./Routes/userRouter'); 
+const app = express();
 
-const app = express()
 
 var corsOptions = {
-    origin: 'https://localhost:8080'
-}
+  origin: 'https://localhost:8080',
+};
 
-//Middleware of the API Project
+//Middleware
 
-app.use(cors(corsOptions))
+// Testing
+app.get('/', (req, res) => {
+  res.json({ message: 'Welcome! Your API is Working Fine!' });
+});
 
-app.use(express.json())
 
-app.use(express.urlencoded({extended: true}))
+// Test the database connection
+const PORT = process.env.PORT || 8081;
+testConnection()
+  .then(() => {
+    // Start the server after the database connection is established
+    app.listen(PORT, () => {
+      console.log(`Server is Running at Port : ${PORT}`);
+    });
+  })
+  .catch((error) => {
+    console.error('Error starting the server:', error);
+  });
 
-//Testing
+app.use('/api', userRouter);
 
-app.get('/' , (req, res) => {
-    res.json({ message: 'Welcome Your API is Working Fine !'})
-})
-
-//Port
-const PORT = process.env.PORT || 8081
-
-//Server
-
-app.listen(PORT, () => {
-    console.log(`Server is Running at Port : ${PORT}`)
-})

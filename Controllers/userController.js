@@ -1,53 +1,115 @@
+// usercontroller.js
+const express = require('express');
+// const router = express.Router();
+const { v4: uuidv4 } = require('uuid');
+const User = require('../Models/User');
 
 
+// const moment = require('moment');
 
 
-const AddUser = async (req, res) => {
-    try {
-        const { name, age, email } = req.body;
-        const pool = await poolPromise;
-      
-        const result = await pool
-            .request()
-            .input('Name', mssql.NVarChar(50), name)
-            .input('Age', mssql.Int, age)
-            .input('Email', mssql.NVarChar(100), email)
-            .execute('sp_InsertUser_NJS');
-      
-        if (result && result.rowsAffected[0] === 1) {
-            res.status(201).send("Record created successfully!");
-        } else {
-            res.status(500).send("Error in saving new user");
-        }
-    } catch (err) {
-        console.log("Error in saving new user:", err);
-        res.status(500).send("Error in saving new user");
-    }
-}
+// CREATE (POST)
 
-const getAllUsers = async (req, res) => {
-    try {
-      const pool = await poolPromise;
-  
-      // Assuming your stored procedure is called 'sp_GetAllUsers_NJS'
-      const result = await pool
-        .request()
-        .execute('sp_GetUsers_NJS');
-  
-      if (result && result.recordset.length > 0) {
-        // Assuming your stored procedure returns an array of user records
-        const users = result.recordset;
-        res.send(users);
-      } else {
-        res.status(404).send("No users found");
-      }
-    } catch (err) {
-      console.log("Error fetching users data:", err);
-      res.status(500).send("Error fetching users data", err);
-    }
+  createUser= async (req, res) => {
+  try {
+    const { nickName, profileImage, email, birthday, gender, deviceToken, loginType, userState, withdrawReason,createdAt,updatedAt } = req.body;
+    
+    const newUser = await User.create({
+      id: uuidv4(), // Generate a unique ID
+      nickName,
+      profileImage,
+      email,
+      birthday,
+      gender,
+      deviceToken,
+      loginType,
+      userState,
+      withdrawReason,
+      createdAt,
+      updatedAt,
+    });
+
+    res.status(201).json(newUser);
+  } catch (error) {
+    console.error('Error creating user:', error);
+    res.status(500).json({ error: 'Could not create user.' });
   }
+};
 
-  module.exports = {
-    getAllUsers,
-    AddUser
+
+
+
+// READ (GET)
+
+  getAllUsers= async (req, res) => {
+  try {
+    const users = await User.findAll();
+    res.json(users);
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    res.status(500).json({ error: 'Could not fetch users.' });
   }
+};
+
+// UPDATE (PUT)
+
+  updateUser=async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { nickName, profileImage, email, birthday, gender, deviceToken, loginType, userState, withdrawReason,createdAt,updatedAt } = req.body;
+
+    const user = await User.findByPk(id);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found.' });
+    }
+
+    await user.update({
+      nickName,
+      profileImage,
+      email,
+      birthday,
+      gender,
+      deviceToken,
+      loginType,
+      userState,
+      withdrawReason,
+      createdAt,
+      updatedAt,
+    });
+
+    res.json(user);
+  } catch (error) {
+    console.error('Error updating user:', error);
+    res.status(500).json({ error: 'Could not update user.' });
+  }
+};
+
+// DELETE
+// router.delete('/users/:id', async (req, res) => {
+  deleteUser=async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const user = await User.findByPk(id);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found.' });
+    }
+
+    await user.destroy();
+
+    res.json({ message: 'User deleted successfully.' });
+  } catch (error) {
+    console.error('Error deleting user:', error);
+    res.status(500).json({ error: 'Could not delete user.' });
+  }
+};
+
+// module.exports = router;
+
+module.exports = {
+  createUser,
+  getAllUsers,
+  updateUser,
+  deleteUser,
+};
+
