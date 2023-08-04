@@ -1,4 +1,4 @@
-const express = require('express');
+const express = require('express')
 const cors = require('cors');
 // const dbPool = require('./Config/dbPool'); // Import the dbPool file
 const { testConnection } = require('./Config/dbPool');
